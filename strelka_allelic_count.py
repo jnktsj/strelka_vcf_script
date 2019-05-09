@@ -3,7 +3,6 @@ Script for adding allelic depth and allelic fraction to the Strelka VCF file
 Also for changing TUMOR and NORMAL to tumor and normal sample names
 '''
 
-import sys
 from argparse import ArgumentParser
 
 def _get_allelic_depth(fields, values):
@@ -18,10 +17,11 @@ def _get_allelic_depth(fields, values):
 def _compute_allelic_fraction(ref, alt):
 	try:
 		# Somatic allele frequency is $tier1AltCounts / ($tier1AltCounts + $tier1RefCounts)
-		return float(alt) / (float(ref) + float(alt) + sys.float_info.min)
+		return float(alt) / (float(ref) + float(alt))
 	except:
 		print ('REF count (%s) or ALT count (%s) could not be converted into floats or both equal to 0.' %(ref, alt))
-
+                return 0
+        
 
 def _process_vcf_file(inVcf,outVcf, TUMOR_NAME, NORMAL_NAME):
 	''' Function modifies Strelka indels VCF file 
